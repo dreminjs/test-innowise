@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>test-innowise</title>
+    </head>
+    <body>
+        <header class="header">
+            <div class="container">
+                <a href="#" class="logo">
+                    <img src="./src/assets/book.svg" alt="Logo" />
+                    <span class="logo__inner-container">
+                        <span class="logo__title">The Library</span>
+                        <span class="logo__subtitle"
+                            >Discover your next favorite book</span
+                        >
+                    </span>
+                </a>
+            </div>
+        </header>
+        <main>
+            <div class="search">
+                <div class="container">
+                    <h3 class="title">Discover Your Next Great Read</h3>
+                    <h5 class="subtitle">
+                        Search millions of books, build your personal library,
+                        and never lose track of what to read next
+                    </h5>
+                    <div class="search__container">
+                        <div class="search__input-container">
+                            <img src="./src/assets/search.svg" alt="Logo" />
+                            <input type="text" name="name" value="value" />
+                        </div>
+                        <button type="submit">Search</button>
+                    </div>
+                    <div>
+                        <ul class="books__list"></ul>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script type="module" src="/src/main.ts"></script>
+        <style src="./src/style.css"></style>
+    </body>
+</html>
