@@ -38,6 +38,7 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0px 15px;
 }
 
 .header {
@@ -141,6 +142,8 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 10px 15px;
+    max-width: 860px;
+    width: 100%;
 }
 
 .books__list-item {
@@ -197,6 +200,98 @@ body {
 .books__list-item-year {
     font-size: 14px;
     font-weight: bold;
+    font-family: "Source Sans 3";
+    color: var(--text);
+}
+
+.books__list-item-favorite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    outline: none;
+    border-radius: 100%;
+    padding: 9px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--white);
+    color: var(--title);
+    cursor: pointer;
+}
+
+.books {
+    display: flex;
+    margin: 0 auto;
+}
+
+.books__favourites-header {
+    display: flex;
+    gap: 15px;
+    padding: 20px 25px 15px 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.books__favourites {
+    min-height: 100vh;
+    background-color: var(--white);
+    border-radius: 20px;
+}
+
+.books__favourites-list {
+    padding: 15px;
+    width: 310px;
+}
+
+.books__favourites-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--white);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.books__favourites-list-item-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.books__favourites-list-item-title {
+    font-size: 14px;
+}
+
+.books__favourites-list-item-authors {
+    display: block;
+    font-size: 14px;
+    font-weight: normal;
+    font-family: "Source Sans 3";
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.books__favourites-list-item-year {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Source Sans 3";
+    color: var(--text);
+}
+
+.books__favourites-list-item-preview {
+    width: 50px;
+    height: 75px;
+    border-radius: 10px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.books__favorites-subtitle {
+    font-size: 14px;
+    font-weight: normal;
     font-family: "Source Sans 3";
     color: var(--text);
 }

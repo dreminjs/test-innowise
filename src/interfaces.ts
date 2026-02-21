@@ -1,6 +1,8 @@
 export interface Book {
   title: string;
-  author_name: stirng[];
+  author_name: string[];
+  first_publish_year: number;
+  key: string;
   cover_i: number;
 }
 
