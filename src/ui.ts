@@ -66,7 +66,7 @@ export function renderFavoritesList() {
         </div>
       </div>
       <button class="books__favourites-list-item-remove" data-id="${el.key}">
-        <img src="/public/heart-active.svg" alt="Удалить" style="pointer-events: none;">
+        <img src="heart-active.svg" alt="Удалить" style="pointer-events: none;">
       </button>
     </li>`,
     )
