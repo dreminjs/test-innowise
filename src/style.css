@@ -25,6 +25,12 @@
     box-sizing: border-box;
 }
 
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
 ul {
     list-style: none;
     padding: 0;
@@ -100,8 +106,6 @@ body {
     margin-bottom: 25px;
     margin-left: auto;
     margin-right: auto;
-
-    /*margin: 0 auto;*/
 }
 
 .search {
@@ -313,7 +317,10 @@ body {
 
 @media (min-width: 520px) {
     .books__list-item {
-        max-width: 180px;
+        max-width: 200px;
+    }
+    .books__list {
+        justify-content: center;
     }
 }
 
@@ -330,11 +337,10 @@ body {
 }
 
 @media (max-width: 1200px) {
-    .books__list {
-        justify-content: center;
+    .books__list-item {
+        max-width: 230px;
     }
 }
-
 .footer {
     padding: 25px 0;
     text-align: center;
