@@ -2,9 +2,17 @@ import "./style.css";
 import { getBooks } from "./api";
 import type { Book } from "./interfaces";
 
+function renderStatus(message: string) {
+  const booksList = document.querySelector(".books__list");
+  if (booksList) {
+    booksList.innerHTML = `<li class="books__status-message">${message}</li>`;
+  }
+}
+
 function renderBooks(books: Book[]) {
   const booksList = document.querySelector(".books__list");
   if (!booksList) return;
+
   const favorites: Book[] = JSON.parse(
     localStorage.getItem("favourite_books") || "[]",
   );
@@ -15,11 +23,12 @@ function renderBooks(books: Book[]) {
         ? book.author_name.join(", ")
         : "Неизвестный автор";
       const year = book.first_publish_year || "Неизвестный год";
+      const isFavorite = favorites.some((fav) => fav.key === book.key);
 
       return `
       <li class="books__list-item">
         ${
-          book.key
+          book.cover_i
             ? `<img src="https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg" alt="${book.title}">`
             : "<div class='books__list-item-no-cover'>Нет обложки</div>"
         }
@@ -29,7 +38,8 @@ function renderBooks(books: Book[]) {
           <span class="books__list-item-year">${year}</span>
         </div>
         <button class="books__list-item-favorite" data-id="${book.key}">
-        ${favorites.some((favorite) => favorite.key === book.key) ? '<img src="./src/assets/heart-active.svg" alt="Избранное" style="pointer-events: none;">' : '<img src="./src/assets/heart.svg" alt="Избранное" style="pointer-events: none;">'}
+          <img src="${isFavorite ? "./src/assets/heart-active.svg" : "./src/assets/heart.svg"}"
+               alt="Избранное" style="pointer-events: none;">
         </button>
       </li>
     `;
@@ -37,27 +47,32 @@ function renderBooks(books: Book[]) {
     .join("");
 }
 
-function setupFavorites(books: Book[]) {
+let currentBooks: Book[] = [];
+
+function setupFavoritesListener() {
   const booksList = document.querySelector(".books__list");
-  console.log(booksList);
   if (!booksList) return;
 
-  booksList.addEventListener("click", (event) => {
+  booksList.replaceWith(booksList.cloneNode(true));
+  const newBooksList = document.querySelector(".books__list")!;
+
+  newBooksList.addEventListener("click", (event) => {
     const target = event.target as HTMLElement;
     const favoriteBtn = target.closest(".books__list-item-favorite");
-    console.log(favoriteBtn);
+
     if (favoriteBtn) {
       const bookId = favoriteBtn.getAttribute("data-id");
-      const bookData = books.find((b) => b.key === bookId);
+      const bookData = currentBooks.find((b) => b.key === bookId);
 
       if (bookData) {
         toggleFavorite(bookData);
+        renderBooks(currentBooks);
       }
     }
   });
 }
 
-function toggleFavorite(book: any) {
+function toggleFavorite(book: Book) {
   const favorites: Book[] = JSON.parse(
     localStorage.getItem("favourite_books") || "[]",
   );
@@ -78,7 +93,6 @@ function toggleFavorite(book: any) {
 function renderCountOfFavorites() {
   const favoritesStr = localStorage.getItem("favourite_books");
   const favoritesCount = favoritesStr ? JSON.parse(favoritesStr).length : 0;
-
   const favoritesElement = document.querySelector(".books__favorites-count");
   if (favoritesElement) {
     favoritesElement.textContent = `${favoritesCount}`;
@@ -88,29 +102,35 @@ function renderCountOfFavorites() {
 function renderFavorites() {
   const favoritesStr = localStorage.getItem("favourite_books");
   const favorites: Book[] = favoritesStr ? JSON.parse(favoritesStr) : [];
-
   const favoritesList = document.querySelector(".books__favourites-list");
-  console.log(favoritesList);
+
   if (favoritesList) {
-    favoritesList.innerHTML = "";
+    if (favorites.length === 0) {
+      favoritesList.innerHTML = "<li>Список пуст</li>";
+      return;
+    }
 
-    const favoritesHTML = favorites
-      .map(
-        (el) => `<li class="books__favourites-list-item">
-                  <div class="books__favourites-list-item-inner">
-                    <img class="books__favourites-list-item-preview" src="https://covers.openlibrary.org/b/id/${el.cover_i}-M.jpg" alt="${el.title}" />
-                    <div>
-                    <span class="books__favourites-list-item-title">${el.title}</span>
-                    <span class="books__favourites-list-item-authors">${el.author_name.map((author) => author).join(", ")}</span>
-                    <span class="books__favourites-list-item-year">${el.first_publish_year}</span>
-                    </div>
-                  </div>
-                    <img src="./src/assets/heart.svg" alt="" />
-                 </li>`,
-      )
+    favoritesList.innerHTML = favorites
+      .map((el) => {
+        const authors = el.author_name
+          ? el.author_name.join(", ")
+          : "Автор не указан";
+        return `
+          <li class="books__favourites-list-item">
+            <div class="books__favourites-list-item-inner">
+              ${
+                el.cover_i
+                  ? `<img class="books__favourites-list-item-preview" src="https://covers.openlibrary.org/b/id/${el.cover_i}-M.jpg" alt="${el.title}" />`
+                  : `<div class="no-cover-mini"></div>`
+              }
+              <div>
+                <span class="books__favourites-list-item-title">${el.title}</span>
+                <span class="books__favourites-list-item-authors">${authors}</span>
+              </div>
+            </div>
+          </li>`;
+      })
       .join("");
-
-    favoritesList.innerHTML = favoritesHTML;
   }
 }
 
@@ -120,27 +140,47 @@ async function handleSearch() {
   );
   const query = input?.value.trim();
 
-  if (query) {
+  if (!query) return;
+
+  try {
+    renderStatus("Загрузка...");
     const booksData = await getBooks(query);
-    renderBooks(booksData.docs);
+
+    if (!booksData.docs || booksData.docs.length === 0) {
+      renderStatus("Нет таких книг");
+      return;
+    }
+
+    currentBooks = booksData.docs;
+    renderBooks(currentBooks);
+  } catch (error) {
+    renderStatus("Ошибка при загрузке данных");
+    console.error(error);
   }
 }
 
-async function main() {
-  const data = await getBooks();
-  const books = data.docs;
+(async function main() {
   const searchBtn = document.querySelector(".search__container button");
-  searchBtn?.addEventListener("click", handleSearch);
+  const input = document.querySelector<HTMLInputElement>(
+    ".search__input-container input",
+  );
 
-  const input = document.querySelector(".search__input-container input");
+  searchBtn?.addEventListener("click", handleSearch);
   input?.addEventListener("keypress", (e) => {
     if (e.key === "Enter") handleSearch();
   });
 
-  renderFavorites();
-  renderBooks(books);
-  renderCountOfFavorites();
-  setupFavorites(books);
-}
+  setupFavoritesListener();
 
-main();
+  try {
+    renderStatus("Загрузка...");
+    const data = await getBooks();
+    currentBooks = data.docs;
+
+    renderBooks(currentBooks);
+    renderFavorites();
+    renderCountOfFavorites();
+  } catch (e) {
+    renderStatus("Ошибка соединения с сервером");
+  }
+})();
