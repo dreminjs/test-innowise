@@ -259,6 +259,7 @@ body {
 .books__favourites-list {
     padding: 15px;
     overflow-y: auto;
+    height: 400px;
 }
 
 .books__favourites-list-item {
