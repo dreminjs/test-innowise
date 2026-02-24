@@ -33,7 +33,7 @@ export function renderBooks(books: Book[]) {
           <span class="books__list-item-year">${year}</span>
         </div>
         <button class="books__list-item-favorite" data-id="${book.key}">
-          <img src="${isFavorite ? "public/heart-active.svg" : "public/heart.svg"}"
+          <img src="${isFavorite ? "heart-active.svg" : "heart.svg"}"
                alt="Избранное" style="pointer-events: none;">
         </button>
       </li>`;
