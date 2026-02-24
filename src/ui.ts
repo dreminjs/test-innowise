@@ -33,7 +33,7 @@ export function renderBooks(books: Book[]) {
           <span class="books__list-item-year">${year}</span>
         </div>
         <button class="books__list-item-favorite" data-id="${book.key}">
-          <img src="${isFavorite ? "./src/assets/heart-active.svg" : "./src/assets/heart.svg"}"
+          <img src="${isFavorite ? "public/heart-active.svg" : "public/heart.svg"}"
                alt="Избранное" style="pointer-events: none;">
         </button>
       </li>`;
@@ -66,7 +66,7 @@ export function renderFavoritesList() {
         </div>
       </div>
       <button class="books__favourites-list-item-remove" data-id="${el.key}">
-        <img src="./src/assets/heart-active.svg" alt="Удалить" style="pointer-events: none;">
+        <img src="/public/heart-active.svg" alt="Удалить" style="pointer-events: none;">
       </button>
     </li>`,
     )
